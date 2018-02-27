@@ -7,7 +7,7 @@ pkgbase=qt5-base
 pkgname=(qt5-base qt5-xcb-private-headers)
 _qtver=5.10.1
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=3
 arch=(x86_64)
 url='http://qt-project.org/'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -27,7 +27,8 @@ optdepends=('qt5-svg: to use SVG icon themes'
 conflicts=('qtchooser')
 groups=('qt' 'qt5')
 _pkgfqn="${pkgbase/5-/}-everywhere-src-${_qtver}"
-source=("http://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz")
+source=("http://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
+		"revert-Set-sharedPainter-correctly-for-QGraphicsEffect.patch")
 sha256sums=('d8660e189caa5da5142d5894d328b61a4d3ee9750b76d61ad74e4eee8765a969')
 validpgpkeys=('6DD4217456569BA711566AC7F06E8FDE7B45DAAC') # Eric Vidal
 
@@ -48,6 +49,9 @@ prepare() {
   # Fix missing private includes https://bugreports.qt.io/browse/QTBUG-37417
   sed -e '/CMAKE_NO_PRIVATE_INCLUDES\ \=\ true/d' -i mkspecs/features/create_cmake.prf
   
+  # Revert upstream commit which breaks some Deepin components (FS#57531)
+  # https://bugreports.qt.io/browse/QTBUG-66226
+  patch -Np1 -i ../revert-Set-sharedPainter-correctly-for-QGraphicsEffect.patch
 }
 
 build() {
