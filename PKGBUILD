@@ -7,7 +7,7 @@ pkgbase=qt5-base
 pkgname=(qt5-base qt5-xcb-private-headers)
 _qtver=5.10.1
 pkgver=${_qtver/-/}
-pkgrel=3
+pkgrel=5
 arch=(x86_64)
 url='http://qt-project.org/'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -28,8 +28,13 @@ conflicts=('qtchooser')
 groups=('qt' 'qt5')
 _pkgfqn="${pkgbase/5-/}-everywhere-src-${_qtver}"
 source=("http://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
-		"revert-Set-sharedPainter-correctly-for-QGraphicsEffect.patch")
-sha256sums=('d8660e189caa5da5142d5894d328b61a4d3ee9750b76d61ad74e4eee8765a969')
+		"revert-Set-sharedPainter-correctly-for-QGraphicsEffect.patch"
+		"qtbug-65478.patch"
+		qheaderview-restore.patch::"https://code.qt.io/cgit/qt/qtbase.git/patch/?id=4a04eea4")
+sha256sums=('d8660e189caa5da5142d5894d328b61a4d3ee9750b76d61ad74e4eee8765a969'
+            'e98cb66de308f85ef2d8e05062ada4d1ca4d88ebe836281489d5c0c9c2495a4b'
+            '9afdfc018c3894f12e7a01a8221d9f7be9feba00902d98f0e6a09612b68b2619'
+            '3a1016cbf8c3c4676e6fc406756ffa5a151ffe09153dfc0fa7ed3c16945b0ae5')
 validpgpkeys=('6DD4217456569BA711566AC7F06E8FDE7B45DAAC') # Eric Vidal
 
 prepare() {
@@ -52,6 +57,12 @@ prepare() {
   # Revert upstream commit which breaks some Deepin components (FS#57531)
   # https://bugreports.qt.io/browse/QTBUG-66226
   patch -Np1 -i ../revert-Set-sharedPainter-correctly-for-QGraphicsEffect.patch
+  
+  # Fix kexi crash at startup http://bugreports.qt.io/browse/QTBUG-65478
+  patch -p1 -i ../qtbug-65478.patch
+  
+  # Fix restoring column status in kmail and ksysguard
+  patch -p1 -i ../qheaderview-restore.patch
 }
 
 build() {
