@@ -7,7 +7,7 @@ pkgbase=qt5-base
 pkgname=(qt5-base qt5-xcb-private-headers)
 _qtver=5.10.1
 pkgver=${_qtver/-/}
-pkgrel=5
+pkgrel=6
 arch=(x86_64)
 url='http://qt-project.org/'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -30,11 +30,13 @@ _pkgfqn="${pkgbase/5-/}-everywhere-src-${_qtver}"
 source=("http://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfqn}.tar.xz"
 		"revert-Set-sharedPainter-correctly-for-QGraphicsEffect.patch"
 		"qtbug-65478.patch"
-		qheaderview-restore.patch::"https://code.qt.io/cgit/qt/qtbase.git/patch/?id=4a04eea4")
+		qheaderview-restore.patch::"https://code.qt.io/cgit/qt/qtbase.git/patch/?id=4a04eea4"
+		qtbug-66444.patch::"https://code.qt.io/cgit/qt/qtbase.git/patch/?id=9395f35c")
 sha256sums=('d8660e189caa5da5142d5894d328b61a4d3ee9750b76d61ad74e4eee8765a969'
             'e98cb66de308f85ef2d8e05062ada4d1ca4d88ebe836281489d5c0c9c2495a4b'
             '9afdfc018c3894f12e7a01a8221d9f7be9feba00902d98f0e6a09612b68b2619'
-            '3a1016cbf8c3c4676e6fc406756ffa5a151ffe09153dfc0fa7ed3c16945b0ae5')
+            '3a1016cbf8c3c4676e6fc406756ffa5a151ffe09153dfc0fa7ed3c16945b0ae5'
+            '88766a7b73a03e1219800c8fdc56afbf23b15d16cc61c4d77547b1fd2404ea6e')
 validpgpkeys=('6DD4217456569BA711566AC7F06E8FDE7B45DAAC') # Eric Vidal
 
 prepare() {
@@ -63,6 +65,9 @@ prepare() {
   
   # Fix restoring column status in kmail and ksysguard
   patch -p1 -i ../qheaderview-restore.patch
+  
+  # Fix QHeaderView regression https://bugreports.qt.io/browse/QTBUG-66444
+  patch -p1 -i ../qtbug-66444.patch
 }
 
 build() {
