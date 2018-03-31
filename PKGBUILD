@@ -16,7 +16,7 @@ depends=('libjpeg-turbo' 'xcb-util-keysyms' 'xcb-util-renderutil' 'libgl' 'fontc
          'xcb-util-wm' 'libxrender' 'libxi' 'sqlite' 'xcb-util-image' 'icu' 'pcre2'
          'tslib' 'libinput' 'libsm' 'libxkbcommon-x11' 'libproxy' 'libcups' 'double-conversion')
 makedepends=('libfbclient' 'libmariadbclient' 'sqlite' 'unixodbc' 'postgresql-libs' 'alsa-lib' 'gst-plugins-base-libs'
-			'gtk3' 'libpulse' 'cups' 'freetds' 'vulkan-headers')
+			'gtk3' 'libpulse' 'cups' 'freetds' 'vulkan-headers' 'icu')
 optdepends=('qt5-svg: to use SVG icon themes'
             'postgresql-libs: PostgreSQL driver'
             'libmariadbclient: MariaDB driver'
