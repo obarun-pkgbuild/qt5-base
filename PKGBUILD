@@ -7,13 +7,13 @@ pkgbase=qt5-base
 pkgname=(qt5-base qt5-xcb-private-headers)
 _qtver=5.10.1
 pkgver=${_qtver/-/}
-pkgrel=9
+pkgrel=10
 arch=(x86_64)
 url='http://qt-project.org/'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
 pkgdesc='A cross-platform application and UI framework'
 depends=('libjpeg-turbo' 'xcb-util-keysyms' 'xcb-util-renderutil' 'libgl' 'fontconfig' 'xdg-utils'
-         'xcb-util-wm' 'libxrender' 'libxi' 'sqlite' 'xcb-util-image' 'icu' 'pcre2'
+         'xcb-util-wm' 'libxrender' 'libxi' 'sqlite' 'xcb-util-image' 'icu' 'pcre2' 'shared-mime-info'
          'tslib' 'libinput' 'libsm' 'libxkbcommon-x11' 'libproxy' 'libcups' 'double-conversion')
 makedepends=('libfbclient' 'libmariadbclient' 'sqlite' 'unixodbc' 'postgresql-libs' 'alsa-lib' 'gst-plugins-base-libs'
 			'gtk3' 'libpulse' 'cups' 'freetds' 'vulkan-headers' 'icu')
@@ -32,7 +32,8 @@ source=("http://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submo
 		"qtbug-65478.patch"
 		qheaderview-restore.patch::"https://code.qt.io/cgit/qt/qtbase.git/patch/?id=4a04eea4"
 		qtbug-66444.patch::"https://code.qt.io/cgit/qt/qtbase.git/patch/?id=9395f35c"
-		qtbug-66420.patch::"https://code.qt.io/cgit/qt/qtbase.git/patch/?id=fa091640")
+		qtbug-66420.patch::"https://code.qt.io/cgit/qt/qtbase.git/patch/?id=fa091640"
+		qtbug-66816.patch::"https://code.qt.io/cgit/qt/qtbase.git/patch/?id=e4e87a2e")
 sha256sums=('d8660e189caa5da5142d5894d328b61a4d3ee9750b76d61ad74e4eee8765a969'
             'e98cb66de308f85ef2d8e05062ada4d1ca4d88ebe836281489d5c0c9c2495a4b'
             '9afdfc018c3894f12e7a01a8221d9f7be9feba00902d98f0e6a09612b68b2619'
@@ -72,6 +73,9 @@ prepare() {
 
   # Fix white screen with Mesa 18 https://bugreports.qt.io/browse/QTBUG-66420
   patch -p1 -i ../qtbug-66420.patch
+  
+  # Fix crashes in QSqlite http://bugreports.qt.io/browse/QTBUG-66816
+  patch -p1 -i ../qtbug-66816.patch
 }
 
 build() {
