@@ -7,7 +7,7 @@ pkgbase=qt5-base
 pkgname=(qt5-base qt5-xcb-private-headers)
 _qtver=5.11.0
 pkgver=${_qtver/-/}
-pkgrel=2
+pkgrel=3
 arch=(x86_64)
 url='http://qt-project.org/'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -43,10 +43,7 @@ prepare() {
   sed -i -e "s|^\(QMAKE_LFLAGS_RELEASE.*\)|\1 ${LDFLAGS}|" \
     mkspecs/common/g++-unix.conf
 
-  # Use python2 for Python 2.x
-  find . -name '*.py' -exec sed -i \
-    's|#![ ]*/usr/bin/python$|&2|;s|#![ ]*/usr/bin/env python$|&2|' {} +
-    
+
   # Fix missing private includes https://bugreports.qt.io/browse/QTBUG-37417
   patch -p1 -i ../qt-private-includes.patch
 
@@ -55,13 +52,10 @@ prepare() {
 build() {
   cd ${_pkgfqn}
 
-  # FS#38796
-  #[[ "${CARCH}" = "i686" ]] && SSE2="-no-sse2"
-
   echo "INCLUDEPATH += /usr/include/openssl-1.0" >> src/network/network.pro
   export OPENSSL_LIBS='-L/usr/lib/openssl-1.0 -lssl -lcrypto'
 
-  PYTHON=/usr/bin/python2 ./configure -confirm-license -opensource -v \
+  ./configure -confirm-license -opensource -v \
     -prefix /usr \
     -docdir /usr/share/doc/qt \
     -headerdir /usr/include/qt \
